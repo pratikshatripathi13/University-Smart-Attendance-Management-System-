@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Start Session | University Smart Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(143,148,251,.45), transparent 55%),
+                  radial-gradient(900px 650px at 90% 20%, rgba(78,84,200,.45), transparent 60%),
+                  linear-gradient(120deg, #0b1020, #151a33);
+      min-height:100vh;
+      color:#eef2ff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+    }
+    .panel{
+      width: 980px;
+      max-width: 96%;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .left{
+      border-radius:20px;
+      padding:24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .brand img{width:44px;height:44px;border-radius:14px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px}
+    .t1{font-weight:900; letter-spacing:.2px; font-size:15px}
+    .t2{opacity:.75; font-size:12px; margin-top:2px}
+    h1{margin:10px 0 8px; font-size:24px; line-height:1.2}
+    .muted{margin:0; opacity:.82; font-size:13px}
+    .tips{margin-top:14px;display:grid;gap:10px}
+    .tip{padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background: rgba(255,255,255,.06)}
+    .tip b{display:block;font-size:13px}
+    .tip span{display:block;opacity:.8;font-size:12px;margin-top:3px}
+    .right{
+      border-radius:20px;
+      background:#ffffff;
+      color:#0b1020;
+      padding:24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .right h2{margin:0 0 6px; font-size:20px}
+    .sub{margin:0 0 14px; color:#4b5563; font-size:13px}
+    form p{margin:10px 0}
+    input{
+      width:100%;
+      padding:11px 12px;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      outline:none;
+      font-size:14px;
+    }
+    input:focus{border-color:#6d72ff; box-shadow:0 0 0 4px rgba(109,114,255,.18)}
+    .btn{
+      width:100%;
+      margin-top:10px;
+      padding:12px 14px;
+      border:none;
+      border-radius:12px;
+      background: linear-gradient(120deg, #4e54c8, #8f94fb);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn:hover{opacity:.96}
+    .link{
+      display:block;
+      text-align:center;
+      margin-top:10px;
+      text-decoration:none;
+      font-weight:900;
+      color:#4e54c8;
+      font-size:13px;
+    }
+    @media (max-width: 900px){.panel{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div class="left">
+      <div class="brand">
+        <img src="{% static 'accounts/logo.png' %}" alt="Logo" />
+        <div>
+          <div class="t1">University Smart Attendance</div>
+          <div class="t2">Faculty Session Control</div>
+        </div>
+      </div>
+      <h1>Start a timed attendance session</h1>
+      <p class="muted">OTP is generated automatically. Students can only mark within this time window.</p>
+
+      <div class="tips">
+        <div class="tip"><b>Minutes (1–15)</b><span>Short time reduces hostel proxy attempts.</span></div>
+        <div class="tip"><b>Expected Count</b><span>Optional: compare physical headcount with verified marks.</span></div>
+        <div class="tip"><b>Close Session</b><span>Get absentee list + mismatch warning instantly.</span></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2>Create Session</h2>
+      <p class="sub">Enter course id, duration and optional expected count.</p>
+
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Start Session</button>
+      </form>
+
+      <a class="link" href="/attendance/faculty/">Back to Faculty Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

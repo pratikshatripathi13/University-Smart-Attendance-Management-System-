@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enroll Face | University Smart Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(143,148,251,.55), transparent 55%),
+                  radial-gradient(900px 650px at 85% 20%, rgba(78,84,200,.55), transparent 60%),
+                  linear-gradient(120deg, #0b1020, #151a33);
+      min-height:100vh;
+      color:#eef2ff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+    }
+    .card{
+      width: 920px;
+      max-width: 96%;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .left{
+      border-radius:20px;
+      padding:24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .brand img{width:44px;height:44px;border-radius:14px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px}
+    .t1{font-weight:900; letter-spacing:.2px; font-size:15px}
+    .t2{opacity:.75; font-size:12px; margin-top:2px}
+    h1{margin:10px 0 8px; font-size:26px; line-height:1.2}
+    .muted{margin:0; opacity:.82; font-size:13px}
+    .tips{margin-top:14px;display:grid;gap:10px}
+    .tip{padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background: rgba(255,255,255,.06)}
+    .tip b{display:block;font-size:13px}
+    .tip span{display:block;opacity:.8;font-size:12px;margin-top:3px}
+    .right{
+      border-radius:20px;
+      background:#ffffff;
+      color:#0b1020;
+      padding:24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .right h2{margin:0 0 6px; font-size:20px}
+    .sub{margin:0 0 14px; color:#4b5563; font-size:13px}
+    form p{margin:10px 0}
+    input[type="file"]{
+      width:100%;
+      padding:10px;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    .btn{
+      width:100%;
+      margin-top:10px;
+      padding:12px 14px;
+      border:none;
+      border-radius:12px;
+      background: linear-gradient(120deg, #4e54c8, #8f94fb);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn:hover{opacity:.96}
+    .err{
+      margin: 8px 0 0;
+      color:#b00020;
+      font-weight:800;
+      font-size:13px;
+    }
+    .small{margin-top:12px;font-size:12px;color:#6b7280;text-align:center}
+    @media (max-width: 900px){.card{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="left">
+      <div class="brand">
+        <img src="{% static 'accounts/logo.png' %}" alt="University Logo" />
+        <div>
+          <div class="t1">University Smart Attendance</div>
+          <div class="t2">Face Enrollment</div>
+        </div>
+      </div>
+
+      <h1>Enroll your face (one-time)</h1>
+      <p class="muted">This helps prevent proxy attendance. Upload a clear front-facing photo. After enrollment, you can mark attendance using a selfie or camera capture.</p>
+
+      <div class="tips">
+        <div class="tip"><b>Good lighting</b><span>Face should be bright and not blurry.</span></div>
+        <div class="tip"><b>Front face</b><span>No side angles, no sunglasses, no mask.</span></div>
+        <div class="tip"><b>Single person</b><span>Only your face should be visible.</span></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2>Upload face photo</h2>
+      <p class="sub">This is saved to your profile securely in the system (demo).</p>
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Save & Continue</button>
+        {% if error %}<div class="err">{{ error }}</div>{% endif %}
+      </form>
+
+      <div class="small">After this, you’ll go to your dashboard.</div>
+    </div>
+  </div>
+</body>
+</html>

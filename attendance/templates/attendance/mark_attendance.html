@@ -1,0 +1,484 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mark Attendance | University Smart Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      min-height:100vh;
+      background:
+        radial-gradient(1100px 700px at 15% 10%, rgba(34,211,238,.45), transparent 60%),
+        radial-gradient(900px 650px at 90% 20%, rgba(249,115,22,.30), transparent 55%),
+        radial-gradient(800px 650px at 50% 100%, rgba(168,85,247,.25), transparent 60%),
+        linear-gradient(140deg, #070a12, #0b1020 60%, #071026);
+      color:#eef2ff;
+      padding:18px;
+    }
+
+    .topbar{
+      max-width:1200px;
+      margin:0 auto 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 260px;
+    }
+    .brand img{
+      width:46px;height:46px;border-radius:16px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      padding:7px;
+    }
+    .brandTitle{
+      font-weight:950;
+      font-size:18px;
+      letter-spacing:.2px;
+      line-height:1.1;
+    }
+    .brandSub{
+      margin-top:2px;
+      font-size:12px;
+      opacity:.8;
+      font-weight:800;
+    }
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      font-size:12px;
+      font-weight:900;
+      color:#f1f5ff;
+      white-space:nowrap;
+    }
+    .pill b{color:#fff}
+    .linkBtn{
+      text-decoration:none;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:12px;
+      font-weight:950;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      color:#fff;
+    }
+    .linkBtn:hover{opacity:.95}
+
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      align-items:start;
+    }
+
+    .info{
+      border-radius:22px;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+    .info h1{
+      margin:4px 0 8px;
+      font-size:34px;
+      letter-spacing:.2px;
+    }
+    .info p{
+      margin:0 0 12px;
+      opacity:.85;
+      font-weight:700;
+      font-size:13px;
+      max-width: 560px;
+    }
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+    }
+    .tip{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(34,211,238,.30);
+      background: rgba(34,211,238,.12);
+      color:#bff8ff;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .card{
+      border-radius:22px;
+      background:#ffffff;
+      color:#0b1020;
+      padding:18px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      border:1px solid rgba(0,0,0,.06);
+    }
+    .cardTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .cardTop h2{margin:0;font-size:18px}
+    .sub{margin-top:4px;color:#64748b;font-size:13px;font-weight:700}
+    .badge{
+      padding:8px 10px;
+      border-radius:999px;
+      background: linear-gradient(120deg, #ecfeff, #eef2ff);
+      border:1px solid #e2e8f0;
+      font-size:12px;
+      font-weight:950;
+      white-space:nowrap;
+    }
+
+    .err{
+      margin:10px 0 12px;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(239,68,68,.25);
+      background: rgba(239,68,68,.10);
+      color:#b91c1c;
+      font-weight:950;
+      font-size:13px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+      align-items:start;
+    }
+
+    .cam{
+      border-radius:18px;
+      border:1px solid #e2e8f0;
+      overflow:hidden;
+      background: linear-gradient(180deg, #0b1020, #111827);
+      min-height: 290px;
+      position:relative;
+    }
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scaleX(-1);
+    }
+    canvas{display:none}
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      padding:12px;
+      gap:10px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.60));
+    }
+    .hint{
+      color:#e5e7eb;
+      font-size:12px;
+      font-weight:950;
+    }
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .btnStart{
+      background: linear-gradient(120deg, #22d3ee, #60a5fa);
+      color:#06202b;
+    }
+    .btnCapture{
+      background: linear-gradient(120deg, #a78bfa, #f472b6);
+      color:#140a1f;
+    }
+    .btnSubmit{
+      width:100%;
+      background: linear-gradient(120deg, #16a34a, #22c55e);
+      color:#06210f;
+    }
+    .btnRetake{
+      width:100%;
+      background: linear-gradient(120deg, #fb7185, #ef4444);
+      color:#2a060b;
+    }
+
+    .field{display:grid;gap:6px;margin-top:12px}
+    label{font-size:12px;font-weight:950;color:#0b1020}
+    input[type="text"]{
+      width:100%;
+      padding:12px 12px;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      outline:none;
+      font-size:14px;
+      background:#ffffff;
+    }
+    input[type="text"]:focus{border-color:#22d3ee; box-shadow:0 0 0 4px rgba(34,211,238,.18)}
+
+    .side{
+      border-radius:18px;
+      border:1px solid #e2e8f0;
+      background:#f8fafc;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .snap{
+      border-radius:16px;
+      border:1px solid #e2e8f0;
+      background:#ffffff;
+      overflow:hidden;
+      min-height: 180px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#64748b;
+      font-weight:950;
+      font-size:12px;
+    }
+    .snap img{width:100%;height:100%;object-fit:cover}
+    .small{
+      font-size:12px;
+      color:#64748b;
+      font-weight:800;
+    }
+
+    .bottomBtns{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .links{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .links a{
+      text-decoration:none;
+      font-weight:950;
+      font-size:13px;
+      color:#2563eb;
+    }
+
+    @media (max-width: 980px){
+      .wrap{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .bottomBtns{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <img src="{% static 'accounts/logo.png' %}" alt="Logo" />
+      <div>
+        <div class="brandTitle">University Smart Attendance</div>
+        <div class="brandSub">Secure OTP + Live Face Verification</div>
+      </div>
+    </div>
+
+    <div class="topActions">
+      <div class="pill">Course: <b>{{ session.course }}</b></div>
+      <div class="pill">Window: <b>{{ session.start_time|date:"H:i" }}–{{ session.end_time|date:"H:i" }}</b></div>
+      <a class="linkBtn" href="/attendance/student/">Dashboard</a>
+      <a class="linkBtn" href="/accounts/logout/">Logout</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="info">
+      <h1>Mark Attendance</h1>
+      <p>Capture your face live and submit the OTP shown by the faculty. Attendance is accepted only if the face matches your enrolled photo.</p>
+
+      <div class="chips">
+        <div class="chip">Session ID: <b>{{ session.id }}</b></div>
+        <div class="chip">Status: <b>{% if session.is_closed %}Closed{% else %}Open{% endif %}</b></div>
+      </div>
+
+      <div class="tip">Tip: Good light + front face + remove cap/mask. Capture once, then submit OTP.</div>
+    </div>
+
+    <div class="card">
+      <div class="cardTop">
+        <div>
+          <h2>Live Capture + OTP</h2>
+          <div class="sub">Camera capture is required (no file upload).</div>
+        </div>
+        <div class="badge">Verification: DeepFace</div>
+      </div>
+
+      {% if error %}
+        <div class="err">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" id="markForm">
+        {% csrf_token %}
+        <input type="hidden" name="selfie_data" id="selfie_data" value="">
+
+        <div class="grid">
+          <div>
+            <div class="cam">
+              <video id="video" autoplay playsinline></video>
+              <canvas id="canvas"></canvas>
+
+              <div class="overlay">
+                <div class="hint" id="hint">Ready</div>
+                <div class="btnrow">
+                  <button type="button" class="btn btnStart" id="btnStart">Start Camera</button>
+                  <button type="button" class="btn btnCapture" id="btnCapture" disabled>Capture</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>OTP</label>
+              <input type="text" name="otp" placeholder="Enter OTP shown by faculty" required>
+            </div>
+
+            <div class="bottomBtns">
+              <button class="btn btnSubmit" type="submit" id="btnSubmit" disabled>Submit Attendance</button>
+              <button class="btn btnRetake" type="button" id="btnReset" disabled>Retake</button>
+            </div>
+          </div>
+
+          <div class="side">
+            <div style="font-weight:950;font-size:13px">Captured Preview</div>
+            <div class="snap" id="previewBox">
+              <div id="previewText">No capture yet</div>
+              <img id="previewImg" alt="" style="display:none">
+            </div>
+            <div class="small">
+              Your capture will be verified against your enrolled face image.
+              If it fails: improve lighting, remove blur, look straight.
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="links">
+        <a href="/attendance/student/">← Back to Student Dashboard</a>
+        <a href="/attendance/student/">View sessions</a>
+      </div>
+    </div>
+  </div>
+<script>
+document.getElementById("attForm").addEventListener("submit", function(){
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.innerText = "Submitting...";
+});
+</script>
+  <script>
+    const video = document.getElementById("video")
+    const canvas = document.getElementById("canvas")
+    const selfieData = document.getElementById("selfie_data")
+    const btnStart = document.getElementById("btnStart")
+    const btnCapture = document.getElementById("btnCapture")
+    const btnSubmit = document.getElementById("btnSubmit")
+    const btnReset = document.getElementById("btnReset")
+    const hint = document.getElementById("hint")
+    const previewImg = document.getElementById("previewImg")
+    const previewText = document.getElementById("previewText")
+
+    let stream = null
+    let captured = false
+
+    async function startCam(){
+      try{
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+        video.srcObject = stream
+        hint.textContent = "Camera started"
+        btnCapture.disabled = false
+      }catch(e){
+        hint.textContent = "Camera blocked. Allow camera permission."
+      }
+    }
+
+    function capture(){
+      const w = video.videoWidth
+      const h = video.videoHeight
+      if(!w || !h) return
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext("2d")
+      ctx.translate(w, 0)
+      ctx.scale(-1, 1)
+      ctx.drawImage(video, 0, 0, w, h)
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.92)
+      selfieData.value = dataUrl
+      previewImg.src = dataUrl
+      previewImg.style.display = "block"
+      previewText.style.display = "none"
+      captured = true
+      btnSubmit.disabled = false
+      btnReset.disabled = false
+      hint.textContent = "Captured. Now submit OTP."
+    }
+
+    function resetCapture(){
+      selfieData.value = ""
+      previewImg.src = ""
+      previewImg.style.display = "none"
+      previewText.style.display = "block"
+      captured = false
+      btnSubmit.disabled = true
+      hint.textContent = "Retake ready"
+    }
+
+    btnStart.addEventListener("click", startCam)
+    btnCapture.addEventListener("click", capture)
+    btnReset.addEventListener("click", resetCapture)
+
+    document.getElementById("markForm").addEventListener("submit", (e) => {
+      if(!captured || !selfieData.value){
+        e.preventDefault()
+        hint.textContent = "Capture required before submit."
+      }
+    })
+  </script>
+</body>
+</html>

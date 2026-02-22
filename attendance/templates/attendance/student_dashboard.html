@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard | University Smart Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(143,148,251,.45), transparent 55%),
+                  radial-gradient(900px 650px at 90% 20%, rgba(78,84,200,.45), transparent 60%),
+                  linear-gradient(120deg, #0b1020, #151a33);
+      min-height:100vh;
+      color:#eef2ff;
+      padding: 22px;
+    }
+    .wrap{max-width:1100px;margin:0 auto}
+    .top{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      padding:16px 18px;border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand img{width:40px;height:40px;border-radius:14px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px}
+    .t1{font-weight:900;font-size:14px}
+    .t2{opacity:.75;font-size:12px;margin-top:2px}
+    .btn{
+      text-decoration:none;
+      font-weight:900;
+      font-size:13px;
+      padding:10px 12px;
+      border-radius:12px;
+      color:#0b1020;
+      background:#ffffff;
+      border:1px solid rgba(0,0,0,.08);
+    }
+    .btn:hover{opacity:.95}
+    .grid{display:grid;grid-template-columns: 1fr 1fr; gap:16px; margin-top:16px}
+    .card{
+      border-radius:18px;
+      padding:16px 16px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    h2{margin:0 0 8px;font-size:16px}
+    .muted{opacity:.78;font-size:12px;margin:0 0 10px}
+    .list{display:grid;gap:10px}
+    .item{
+      padding:12px;border-radius:16px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+    }
+    .meta{font-size:12px;opacity:.85}
+    .tag{font-size:11px;font-weight:900;padding:6px 10px;border-radius:999px;background: rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+    .mark{
+      text-decoration:none;
+      font-weight:900;
+      font-size:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      color:#0b1020;
+      background: linear-gradient(120deg, #ffffff, #eef2ff);
+      border:1px solid rgba(0,0,0,.08);
+      white-space:nowrap;
+    }
+    .badge{font-size:11px;font-weight:900;padding:6px 10px;border-radius:999px;border:1px solid transparent}
+.badge.live{background:#ecfdf5;border-color:#86efac;color:#065f46}
+.badge.ended{background:#fff7ed;border-color:#fdba74;color:#9a3412}
+.badge.closed{background:#f1f5f9;border-color:#cbd5e1;color:#0f172a}
+    .mark:hover{opacity:.96}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <img src="{% static 'accounts/logo.png' %}" alt="Logo" />
+        <div>
+          <div class="t1">Student Dashboard</div>
+          <div class="t2">OTP + Face Verified Attendance</div>
+        </div>
+      </div>
+      <a class="btn" href="/accounts/logout/">Logout</a>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Your Courses</h2>
+        <p class="muted">These are the courses you are enrolled in.</p>
+        <div class="list">
+          {% for e in enrollments %}
+            <div class="item">
+              <div>
+                <div style="font-weight:900">{{ e.course }}</div>
+                <div class="meta">Course enrollment active</div>
+              </div>
+              <span class="tag">ENROLLED</span>
+            </div>
+          {% empty %}
+            <div class="item"><div>No enrollments yet.</div></div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Attendance Sessions</h2>
+        <p class="muted">Mark attendance only during an active faculty session.</p>
+        <div class="list">
+          {% for s in sessions %}
+            <div class="item">
+              <div>
+                <div style="font-weight:900">{{ s.course }}</div>
+                <div class="meta">{{ s.start_time }} → {{ s.end_time }} {% if s.is_closed %}
+  <span class="badge closed">CLOSED</span>
+{% else %}
+  {% if s.is_active %}
+    <span class="badge live">LIVE</span>
+  {% else %}
+    <span class="badge ended">ENDED</span>
+  {% endif %}
+{% endif %}</div>
+              </div>
+              <a class="mark" href="{% url 'mark_attendance' s.id %}">Mark</a>
+            </div>
+          {% empty %}
+            <div class="item"><div>No sessions available yet. Faculty needs to start a session.</div></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

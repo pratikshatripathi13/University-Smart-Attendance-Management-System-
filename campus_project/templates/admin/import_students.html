@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <h1>Import Students (CSV)</h1>
+  <p><b>CSV Columns required:</b> username,email,password</p>
+  <p><b>Example:</b></p>
+  <pre>username,email,password
+stu01,stu01@mail.com,Pass@123
+stu02,stu02@mail.com,Pass@123</pre>
+
+  <form method="post" enctype="multipart/form-data" style="margin-top:16px;">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv" required />
+    <button type="submit" class="default">Upload & Import</button>
+  </form>
+
+  <hr style="margin:18px 0" />
+  <p>
+    Next: Import enrollments here →
+    <a href="/admin/import-enrollments/"><b>Import Enrollments</b></a>
+  </p>
+{% endblock %}

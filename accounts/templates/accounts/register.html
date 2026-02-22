@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>University Smart Attendance Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(106, 107, 126, 0.55), transparent 55%),
+                  radial-gradient(900px 650px at 85% 20%, rgba(27, 31, 110, 0.55), transparent 60%),
+                  linear-gradient(120deg, #0b1020, #151a33);
+      min-height:100vh;
+      color:#eef2ff;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 22px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+   .brand img{
+  width:54px;height:54px;border-radius:15px;
+  background:#ffffff;               /* solid bg */
+  border:0px solid rgba(255,255,255,.25);
+  padding:2px;
+  filter:none;
+  opacity:1;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+    .brand .t1{font-weight:800; letter-spacing:.2px; font-size:14px; opacity:.95}
+    .brand .t2{font-size:12px; opacity:.75; margin-top:2px}
+    .nav a{
+      color:#eef2ff;
+      text-decoration:none;
+      font-weight:700;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      display:inline-block;
+      margin-left:10px;
+    }
+    .nav a:hover{background: rgba(255,255,255,.10)}
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 10px 22px 34px;
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .hero{
+      border-radius:20px;
+      padding:26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.15;
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin:10px 0 0;
+      opacity:.82;
+      font-size:14px;
+      max-width: 520px;
+    }
+    .chips{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chip{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      font-weight:700;
+      opacity:.95;
+    }
+    .campus{
+      margin-top:20px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+    }
+    .campus svg{width:62px;height:62px; flex:0 0 auto}
+    .campus .c1{font-weight:800}
+    .campus .c2{opacity:.78; font-size:13px; margin-top:4px}
+    .card{
+      border-radius:20px;
+      padding:22px;
+      background:#ffffff;
+      color:#0b1020;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .card h2{margin:0 0 6px; font-size:20px}
+    .card .sub{margin:0 0 16px; color:#4b5563; font-size:13px}
+    form p{margin:10px 0}
+    input{
+      width:100%;
+      padding:11px 12px;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      outline:none;
+      font-size:14px;
+    }
+    input:focus{border-color:#6d72ff; box-shadow:0 0 0 4px rgba(109,114,255,.18)}
+    .errorlist{color:#b00020; padding-left:18px; margin:6px 0}
+    .btn{
+      width:100%;
+      margin-top:10px;
+      padding:12px 14px;
+      border:none;
+      border-radius:12px;
+      background: linear-gradient(120deg, #4e54c8, #8f94fb);
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn:hover{opacity:.96}
+    .links{
+      margin-top:12px;
+      text-align:center;
+      font-size:13px;
+      color:#4b5563;
+    }
+    .links a{color:#4e54c8; font-weight:900; text-decoration:none}
+    .foot{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 6px 22px 22px;
+      opacity:.7;
+      font-size:12px;
+    }
+    @media (max-width: 900px){
+      .wrap{grid-template-columns:1fr}
+      .nav a{margin-left:6px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <img src="{% static 'logo.png' %}" alt="University Logo" />
+      <div>
+        <div class="t1">University Smart Attendance</div>
+        <div class="t2">OTP + Face Recognition Portal</div>
+      </div>
+    </div>
+    <div class="nav">
+      <a href="/accounts/login/">Student Login</a>
+      <a href="/accounts/login/?role=faculty">Faculty Login</a>
+
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1>University Smart Attendance<br/>Management System</h1>
+      <p>
+        A secure attendance workflow where faculty starts a timed session, students verify using OTP + face match,
+        absentees are auto-detected, and notifications are simulated for reporting.
+      </p>
+
+      <div class="chips">
+        <div class="chip">Timed OTP Session</div>
+        <div class="chip">Face Match Verification</div>
+        <div class="chip">Absentee Detection</div>
+        <div class="chip">Faculty Headcount Check</div>
+        <div class="chip">Attendance Summary</div>
+      </div>
+
+      <div class="campus">
+        <svg viewBox="0 0 64 64" fill="none">
+          <path d="M32 6L6 18l26 12 26-12L32 6Z" stroke="rgba(255,255,255,.85)" stroke-width="2"/>
+          <path d="M14 28v18c0 6 36 6 36 0V28" stroke="rgba(255,255,255,.85)" stroke-width="2"/>
+          <path d="M22 26v-6h20v6" stroke="rgba(255,255,255,.65)" stroke-width="2"/>
+          <path d="M26 50V36h12v14" stroke="rgba(255,255,255,.65)" stroke-width="2"/>
+        </svg>
+        <div>
+          <div class="c1">Campus-ready design</div>
+          <div class="c2">Built for class-wise attendance between 9AM–5PM with faculty controlled sessions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Student Registration</h2>
+      <p class="sub">Create your account. After login, you will enroll your face once.</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Create Student Account</button>
+      </form>
+      <div class="links">
+        Already registered? <a href="/accounts/login/">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    © Smart Campus Project • Secure session-based marking • AI Face Verification enabled
+  </div>
+</body>
+</html>

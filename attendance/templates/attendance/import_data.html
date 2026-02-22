@@ -1,0 +1,140 @@
+{% extends "attendance/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}CSV Import{% endblock %}
+{% block brand_sub %}Faculty / Admin Import{% endblock %}
+
+{% block page_title %}CSV Import Center{% endblock %}
+{% block page_subtitle %}Upload students + enrollments in seconds (teacher-friendly demo feature){% endblock %}
+
+{% block nav %}
+  <a href="{% url 'faculty_dashboard' %}">Overview <span class="pill blue">Home</span></a>
+  <a href="{% url 'start_session' %}">Start Session <span class="pill green">OTP</span></a>
+  <a href="{% url 'import_data' %}">CSV Import <span class="pill orange">Data</span></a>
+{% endblock %}
+
+{% block top_actions %}
+  <a class="btn alt" href="{% url 'faculty_dashboard' %}">Back</a>
+  <a class="btn alt" href="/accounts/logout/">Logout</a>
+{% endblock %}
+
+{% block content %}
+<style>
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .hero{
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.10);
+    background: linear-gradient(135deg, rgba(35,178,255,.12), rgba(255,160,60,.10));
+    backdrop-filter: blur(10px);
+    padding:16px;
+  }
+  .hero h2{margin:0 0 8px;font-size:16px;font-weight:1000}
+  .hero p{margin:0;opacity:.82;font-size:12px;line-height:1.5}
+  .box{
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(10px);
+    padding:16px;
+  }
+  .box h3{margin:0 0 6px;font-size:14px;font-weight:1000}
+  .hint{margin:0 0 12px;opacity:.78;font-size:12px}
+  .file{
+    width:100%;
+    padding:11px 12px;
+    border-radius:14px;
+    border:1px dashed rgba(255,255,255,.25);
+    background: rgba(255,255,255,.06);
+    color:#e9eefc;
+  }
+  .btn2{
+    margin-top:10px;
+    width:100%;
+    padding:12px 12px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.14);
+    font-weight:1000;
+    cursor:pointer;
+    color:#0b1224;
+    background: linear-gradient(120deg, #ffffff, #e6f2ff);
+  }
+  .btn2.orange{
+    background: linear-gradient(120deg, #ffd2a3, #ff9f43);
+    border-color: rgba(255,160,60,.30);
+  }
+  .msg{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    font-size:12px;
+    opacity:.95;
+  }
+  .ok{border-color: rgba(46,204,113,.30); background: rgba(46,204,113,.10)}
+  .bad{border-color: rgba(255,99,99,.30); background: rgba(255,99,99,.10)}
+  .sample{
+    margin-top:12px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.18);
+    padding:12px;
+    overflow:auto;
+    font-size:12px;
+    line-height:1.45;
+    color:#dbe7ff;
+  }
+  @media (max-width: 980px){.split{grid-template-columns:1fr}}
+</style>
+
+<div class="hero">
+  <h2>Bulk upload like a real university system</h2>
+  <p>
+    Use <b>Students CSV</b> to create accounts automatically, and <b>Enrollment CSV</b> to map students to courses.
+    This is the fastest way to demo your project to your teacher.
+  </p>
+</div>
+
+<div class="split" style="margin-top:14px">
+  <div class="box">
+    <h3>Upload Students CSV</h3>
+    <p class="hint">Columns: <b>username,email,password</b> (role will be STUDENT automatically)</p>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="students" />
+      <input class="file" type="file" name="csv_file" accept=".csv" required />
+      <button class="btn2" type="submit">Import Students</button>
+    </form>
+
+    <div class="sample">
+username,email,password<br>
+pratiksha12,pratiksha@gmail.com,Test@123<br>
+rahul01,rahul@gmail.com,Test@123
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Upload Enrollment CSV</h3>
+    <p class="hint">Columns: <b>course_code,section,username</b> (enroll student into course)</p>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="enrollments" />
+      <input class="file" type="file" name="csv_file" accept=".csv" required />
+      <button class="btn2 orange" type="submit">Import Enrollments</button>
+    </form>
+
+    <div class="sample">
+course_code,section,username<br>
+CSE101,p132,pratiksha12<br>
+CSE101,p132,rahul01
+    </div>
+  </div>
+</div>
+
+{% if message %}
+  <div class="msg {% if ok %}ok{% else %}bad{% endif %}">{{ message }}</div>
+{% endif %}
+
+{% endblock %}

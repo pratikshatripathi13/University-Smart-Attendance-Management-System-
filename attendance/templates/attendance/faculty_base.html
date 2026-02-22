@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title|default:"Faculty Panel" }}</title>
+  <style>
+  
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:#0b1224;
+      color:#e5e7eb
+    }
+
+    .topbar{
+      height:72px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 22px;
+      background:linear-gradient(180deg,#4b5563,#2b2f36);
+      color:#fff;position:sticky;top:0;z-index:10;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      box-shadow:0 12px 28px rgba(0,0,0,.35)
+    }
+
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{
+      width:44px;height:44px;border-radius:14px;
+      background:rgba(255,255,255,.10);
+      padding:6px;object-fit:contain;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 8px 18px rgba(0,0,0,.35)
+    }
+    .brand .big{font-weight:1000;font-size:20px;letter-spacing:.2px}
+    .brand .small{opacity:.85;font-size:12px;margin-top:2px}
+
+    .layout{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 72px)}
+
+    .side{
+      background:linear-gradient(180deg,#2c3138,#15181d);
+      color:#e5e7eb;padding:18px;
+      position:sticky;top:72px;height:calc(100vh - 72px);
+      border-right:1px solid rgba(255,255,255,.10);
+    }
+
+    .nav{display:grid;gap:14px;margin-top:14px}
+
+    .nav a{
+      text-decoration:none;
+      color:#e5e7eb;
+      font-weight:900;
+      font-size:18px;
+
+      padding:16px 18px;
+      border-radius:18px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
+
+      transition:.18s ease;
+    }
+
+    .nav a:hover{
+      background:linear-gradient(180deg, rgba(240, 158, 64, 0.85), rgba(255,255,255,.06));
+      border-color:rgba(247, 155, 80, 0.92);
+      transform:translateY(-1px);
+    }
+
+    .nav .active{
+      background:linear-gradient(135deg,#f6ad55,#f2994a);
+      border-color:rgba(0,0,0,0);
+      color:#111827;
+      box-shadow:0 12px 28px rgba(242,153,74,.38);
+    }
+
+    .content{
+      padding:18px 20px;
+      background:
+        radial-gradient(900px 650px at 30% 30%, rgba(233, 235, 241, 0.78), transparent 60%),
+        radial-gradient(700px 520px at 80% 20%, rgba(162, 133, 111, 0.81), transparent 60%),
+        linear-gradient(135deg,#0b1224,#0f1a33);
+    }
+  
+
+    .btn{
+      display:inline-block;text-decoration:none;font-weight:1000;
+      padding:12px 14px;border-radius:14px;border:none;cursor:pointer
+    }
+
+    .btn.ghost{
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18)
+    }
+
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 10px;border-bottom:1px solid rgba(239, 236, 236, 0.88);text-align:left;font-size:13px}
+    th{color:rgba(255,255,255,.70);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+
+    @media(max-width:1000px){
+      .layout{grid-template-columns:1fr}
+      .side{position:relative;height:auto;top:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <img src="{% static 'accounts/logo.png' %}" onerror="this.style.display='none'" />
+      <div>
+        <div class="big">University Smart Attendance Management System</div>
+        <div class="small">Faculty Panel · Sessions · CSV · Analytics</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a class="btn ghost" href="/accounts/logout/">Logout</a>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="side">
+      <div style="font-weight:1000;font-size:18px;margin-bottom:6px"></div>
+      <div class="nav">
+        <a href="/attendance/faculty/" class="{% if nav == 'dash' %}active{% endif %}">Dashboard <span>›</span></a>
+        <a href="/attendance/faculty/history/" class="{% if nav == 'history' %}active{% endif %}">History (Date-wise) <span>›</span></a>
+        <a href="/attendance/faculty/analytics/" class="{% if nav == 'analytics' %}active{% endif %}">Analytics <span>›</span></a>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:rgba(229,231,235,.75);line-height:1.45">
+        Tip: History shows daily sessions. Manual marking helps when face match fails.
+      </div>
+    </aside>
+
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

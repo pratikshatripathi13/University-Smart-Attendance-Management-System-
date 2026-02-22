@@ -1,0 +1,294 @@
+{% extends "attendance/faculty_base.html" %}
+{% block content %}
+<style>
+  :root {
+    --bg1: #0b1020;
+    --bg2: #0f1a33;
+
+    --panel: #121a2f;
+    --card: #0f1730;
+
+    --text: #eef2ff;
+    --muted: rgba(238, 242, 255, .72);
+    --line: rgba(255, 255, 255, .08);
+
+    --primary: #4f7cff;
+    --primary2: #2b57e5;
+
+    --accent: #ffb86b;
+    --shadow: 0 18px 45px rgba(0, 0, 0, .35);
+  }
+
+  .content {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2)) !important;
+  }
+
+  .page {
+    padding: 26px;
+    min-height: calc(100vh - 72px);
+  }
+
+  .card {
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+    padding: 22px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .card p.muted {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .filter-form {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, .02);
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px dashed var(--line);
+  }
+
+  /* Dark themed date input */
+  .date-input {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #151a33;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+
+  .date-input:focus {
+    border-color: var(--primary);
+  }
+
+  /* Improve calendar picker icon on Webkit */
+  .date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
+    cursor: pointer;
+  }
+
+  .date-input::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    transition: transform .1s ease, background .2s ease;
+  }
+
+  .btn:active {
+    transform: scale(.97);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary2), var(--primary));
+    color: white;
+    box-shadow: 0 4px 12px rgba(79, 124, 255, .25);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary), #6f95ff);
+  }
+
+  .btn-ghost-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+
+  .btn-ghost-outline:hover {
+    background: rgba(255, 255, 255, .06);
+  }
+
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  /* Redesign table for dark theme */
+  .table-container {
+    margin-top: 16px;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .01);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  th,
+  td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+
+  th {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: rgba(255, 255, 255, .03);
+  }
+
+  td {
+    color: var(--text);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: rgba(255, 255, 255, .03);
+  }
+
+  .badge-stat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 900;
+    font-size: 13px;
+  }
+
+  .badge-present {
+    background: rgba(79, 124, 255, .15);
+    color: #82a5ff;
+    border: 1px solid rgba(79, 124, 255, .3);
+  }
+
+  .badge-absent {
+    background: rgba(255, 184, 107, .15);
+    color: #ffc990;
+    border: 1px solid rgba(255, 184, 107, .3);
+  }
+
+  .otp-text {
+    font-family: monospace;
+    font-size: 15px;
+    color: var(--text);
+    background: rgba(255, 255, 255, .05);
+    padding: 4px 8px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+  }
+
+  .action-cell {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .empty-state {
+    padding: 30px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+</style>
+
+<div class="page">
+  <div class="card">
+    <h2>Date-wise Attendance History</h2>
+    <p class="muted">Pick a date to see all generated session reports and manual marking options.</p>
+
+    <form class="filter-form" method="get">
+      <input type="date" class="date-input" name="date" value="{{ target_date|date:'Y-m-d' }}" />
+      <button class="btn btn-primary" type="submit">Filter Records</button>
+      <a class="btn btn-ghost-outline" href="/attendance/faculty/history/">Jump to Today</a>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Sessions on {{ target_date|date:"d M Y" }}</h2>
+    <p class="muted">Review absentees and verification snapshots for the selected date.</p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Window</th>
+            <th>Present</th>
+            <th>Absent</th>
+            <th>OTP</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td style="font-weight:800">{{ r.session.course }}</td>
+            <td style="color:var(--muted); font-size:13px;">
+              {{ r.session.start_time|date:"h:i A" }} <span style="margin:0 4px;opacity:0.5">→</span> {{
+              r.session.end_time|date:"h:i A" }}
+            </td>
+            <td>
+              <span class="badge-stat badge-present">{{ r.present }}</span>
+            </td>
+            <td>
+              <span class="badge-stat badge-absent">{{ r.absent }}</span>
+            </td>
+            <td>
+              <span class="otp-text">{{ r.session.otp }}</span>
+            </td>
+            <td>
+              <div class="action-cell">
+                <a class="btn btn-primary btn-small" href="{% url 'close_session' r.session.id %}">View Report</a>
+                <a class="btn btn-ghost-outline btn-small" href="{% url 'faculty_manual_mark' r.session.id %}">Manual
+                  Mark</a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="empty-state">
+              No course sessions found for {{ target_date|date:"F j, Y" }}.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <h1>Import Enrollments (CSV)</h1>
+  <p><b>CSV Columns required:</b> course_code,section,username</p>
+  <p><b>Example:</b></p>
+  <pre>course_code,section,username
+CSE101,A,stu01
+CSE101,A,stu02</pre>
+
+  <p style="margin-top:10px;">
+    Note: Courses must already exist in Admin (Course model).
+  </p>
+
+  <form method="post" enctype="multipart/form-data" style="margin-top:16px;">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv" required />
+    <button type="submit" class="default">Upload & Import</button>
+  </form>
+
+  <hr style="margin:18px 0" />
+  <p>
+    Back to students import →
+    <a href="/admin/import-students/"><b>Import Students</b></a>
+  </p>
+{% endblock %}
