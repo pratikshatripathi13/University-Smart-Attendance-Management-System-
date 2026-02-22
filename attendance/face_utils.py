@@ -1,8 +1,17 @@
 import os
-from deepface import DeepFace
+try:
+    from deepface import DeepFace
+except Exception:
+    DeepFace = None
+try:
+    import cv2
+except Exception:
+    cv2 = None
 
 
 def verify_faces(img1_path, img2_path):
+    if DeepFace is None:
+        return False
     if not img1_path or not os.path.exists(img1_path) or os.path.getsize(img1_path) == 0:
         return False, 999.0
 
