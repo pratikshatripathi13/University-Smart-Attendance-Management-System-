@@ -25,6 +25,16 @@ SECRET_KEY = 'django-insecure-ub(tsqml(!2vh--=qk^372(gm86+tjw_fuekb4gbla=)nigp*1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        "OPTIONS": {
+            "timeout": 30,
+        },
+    }
+}
+DATABASES["default"]["OPTIONS"]["init_command"] = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;"
 
 ALLOWED_HOSTS = ["*"]
 

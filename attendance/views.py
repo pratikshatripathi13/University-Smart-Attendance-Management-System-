@@ -177,6 +177,7 @@ def mark_attendance(request, session_id):
                     "form": form,
                     "error": "Invalid camera image. Please capture again."
                 })
+            
 
             record, _ = AttendanceRecord.objects.update_or_create(
                 session=session,
@@ -192,11 +193,16 @@ def mark_attendance(request, session_id):
             record.save()
 
             if not ok:
+                if distance == -1.0:
+                    err_msg = "No face detected. Ensure good lighting and look straight at camera."
+                else:
+                    err_msg = f"Face not matched (distance={distance:.3f}). Retake with better lighting."
                 return render(request, "attendance/mark_attendance.html", {
                     "session": session,
                     "form": MarkAttendanceForm(),
-                    "error": f"Face not matched (distance={distance:.3f}). Retake with better lighting."
+                    "error": err_msg
                 })
+            
 
             return redirect("student_dashboard")
     else:
@@ -461,35 +467,7 @@ def analytics_view(request):
         "nav": "analytics",
         "course_cards": course_cards
     })
-@login_required
-def analytics_view(request):
-    if request.user.role != "FACULTY":
-        return HttpResponseForbidden("Faculty only")
 
-    sessions = AttendanceSession.objects.filter(course__faculty=request.user).select_related("course")
-
-    by_course = defaultdict(lambda: {"total_sessions": 0, "total_present": 0, "total_enrolled": 0})
-    for s in sessions:
-        present = AttendanceRecord.objects.filter(session=s, face_verified=True).count()
-        enrolled = Enrollment.objects.filter(course=s.course).count()
-        by_course[str(s.course)]["total_sessions"] += 1
-        by_course[str(s.course)]["total_present"] += present
-        by_course[str(s.course)]["total_enrolled"] += enrolled
-
-    course_cards = []
-    for k, v in by_course.items():
-        avg = 0
-        if v["total_sessions"] > 0 and v["total_enrolled"] > 0:
-            avg = round((v["total_present"] / (v["total_sessions"] * v["total_enrolled"])) * 100, 1)
-        course_cards.append({"course": k, **v, "avg_percent": avg})
-
-    course_cards.sort(key=lambda x: x["avg_percent"], reverse=True)
-
-    return render(request, "attendance/analytics.html", {
-        "title": "Analytics",
-        "nav": "analytics",
-        "course_cards": course_cards
-    })
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import get_user_model
 

@@ -10,5 +10,7 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         ("University Role", {"fields": ("role", "face_image")}),
     )
-    list_display = ("username", "email", "role", "is_staff", "is_active")
-    list_filter = ("role", "is_staff", "is_active")
+    list_display = ("username", "email", "role", "is_staff", "is_superuser", "is_active")
+    list_filter = ("role", "is_staff", "is_superuser", "is_active")
+    search_fields = ("username", "email")
+    ordering = ("username",)

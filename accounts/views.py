@@ -1,10 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-try:
-    from deepface import DeepFace
-except Exception:
-    DeepFace = None
+from deepface import DeepFace
+
 from .forms import RegisterForm, FaceEnrollForm
 
 

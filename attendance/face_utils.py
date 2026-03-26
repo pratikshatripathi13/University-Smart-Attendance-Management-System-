@@ -24,10 +24,22 @@ def verify_faces(img1_path, img2_path):
             img2_path=img2_path,
             model_name="Facenet",          # Faster than VGG
             detector_backend="opencv",     # Lightweight
-            enforce_detection=False
+            enforce_detection=True
         )
 
-        return bool(result.get("verified", False)), float(result.get("distance", 999.0))
+        verified = bool(result.get("verified", False))
+        distance = float(result.get("distance", 999.0))
 
+        # FaceNet typical threshold is around 0.40 but can be up to 0.90 for low-quality webcams
+        # We'll use 0.90 to be very lenient and avoid false negatives with generic webcams
+        if not verified and distance < 0.90:
+            verified = True
+
+        return verified, distance
+
+    except ValueError as e:
+        if "face could not be detected" in str(e).lower() or "could not be detected" in str(e).lower():
+            return False, -1.0
+        return False, 999.0
     except Exception:
         return False, 999.0
